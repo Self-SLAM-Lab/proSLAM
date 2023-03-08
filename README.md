@@ -24,6 +24,7 @@ Previous versions: <br/>
  - Ubuntu 14.04 LTS (**gcc 5**) + ROS Indigo / OpenCV2 + Qt4 + g2o (see Note for old version)
  - Ubuntu 16.04 LTS (gcc 5) + ROS Kinetic / OpenCV3 + Qt5 + g2o (current)
  - Ubuntu 18.04 LTS (gcc 7) + OpenCV3 + Qt5 + g2o (current)
+ - Ubuntu 20.04 LTS (gcc 9) + OpenCV3 + Qt5 + g2o (1b118ac2)
 
 The complete SLAM system **runs on a single thread** (a second thread is launched for optional visualization) <br/>
 ProSLAM features an extensive [parameter configuration][proslam_wiki] on all SLAM layers and 4 different logging levels
@@ -186,3 +187,72 @@ Please cite our most recent article when using the ProSLAM system: <br>
     }
 
 > ICRA 2018 'ProSLAM: Graph SLAM from a Programmer's Perspective' https://ieeexplore.ieee.org/document/8461180/ (DOI: 10.1109/ICRA.2018.8461180)
+
+
+##  Update for Ubuntu 20.04
+- Install OpenCV 3.2 to another folder
+  - When install ROS Noetic, OpenCV 4 is installed automatically, So need to install OpenCV3.2 to another folder (not `/usr/include`)
+  - use `-DCMAKE_INSTALL_PREFIX=/path/to/install` option when compile OpenCV3.2
+
+```bash
+$ mkdir build
+$ mkdir install
+$ cd build
+$ cmake .. -DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_INSTALL_PREFIX=../install \
+-DINSTALL_C_EXAMPLES=OFF \
+-DINSTALL_PYTHON_EXAMPLES=OFF \
+-DOPENCV_GENERATE_PKGCONFIG=ON \
+-DOPENCV_EXTRA_MODULES_PATH=../../OpenCV3.2_contrib/modules \
+-DOPENCV_ENABLE_NONFREE=ON
+$ sudo make install -j
+```
+- Install G2O with 20170730 Release and remove installed g2o library
+```bash
+$ wget https://github.com/RainerKuemmerle/g2o/archive/refs/tags/20170730_git.tar.gz
+$ tar -xvzf 20170730_git.tar.gz
+$ cd g2o-20170730_git
+$ mkdir build
+$ cd build
+$ cmake ..
+$ sudo make install -j
+$ sudo apt purge ros-noetic-libg2o
+```
+- clone proSLAM
+```bash
+$ cd ~/catkin_ws/src
+$ git clone https://github.com/Self-SLAM-Lab/proSLAM
+$ cd proSLAM
+$ ./pull_srrg_packages.bash
+```
+- Install yaml-cpp
+```bash
+$ wget https://github.com/jbeder/yaml-cpp/archive/refs/tags/yaml-cpp-0.7.0.tar.gz
+$ tar -xvzf yaml-cpp-0.7.0.tar.gz
+$ cd yaml-cpp-yaml-cpp-0.7.0
+$ mkdir build
+$ cd build
+$ cmake .. -DYAML_CPP_BUILD_TESTS=OFF -DYAML_BUILD_SHARED_LIBS=ON
+$ sudo make install -j
+```
+- Install other dependencies
+```bash
+sudo apt-get install build-essential libeigen3-dev libsuitesparse-dev freeglut3-dev libqglviewer-dev-qt5
+sudo apt install qt5-default
+```
+- Modify compile error
+  - `srrg_message_groundtruther_tun_app.cpp` (line 13)
+    - typedef std::map<double, Vector6f, std::less<double>, Eigen::aligned_allocator<std::pair<const double, Vector6f>>> TimePoseMap;
+  - `cloud_viewer.h` (line 14)
+    - Eigen::aligned_allocator<std::pair<const srrg_core::Cloud3D* const, Eigen::Isometry3f> > > CloudIsometryMap;
+- Compile proSLAM with catkin
+  - export OpenCV_DIR (Do not use relative path)
+  - export G2O_ROOT (usually `/usr/local/include/g2o`)
+```bash
+$ cd ~/catkin_ws
+$ export OpenCV_DIR=/path/to/opencv/install_folder
+$ export G2O_ROOT=/path/to/install
+$ catkin_make
+```
+
+
