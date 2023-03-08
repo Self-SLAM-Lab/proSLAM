@@ -65,9 +65,9 @@ if("$ENV{ROS_DISTRO}" STREQUAL "kinetic" OR "$ENV{ROS_DISTRO}" STREQUAL "indigo"
   )
   
   #ds switch to ROS opencv libraries without calling find_package to avoid conflicts with other existing OpenCV installations
-  set(OpenCV_DIR "ROS")
-  set(OpenCV_LIBS ${catkin_LIBRARIES})
-  message("${PROJECT_NAME}|using ROS OpenCV version: '${OpenCV_VERSION}' (${OpenCV_DIR})")
+  # set(OpenCV_DIR "ROS")/
+  # set(OpenCV_LIBS ${catkin_LIBRARIES})
+  # message("${PROJECT_NAME}|using ROS OpenCV version: '${OpenCV_VERSION}' (${OpenCV_DIR})")
   add_definitions(-DSRRG_HBST_HAS_OPENCV)
 else()
 
@@ -77,6 +77,12 @@ else()
     srrg_gl_helpers
     srrg_core_viewers
     srrg_hbst
+    roscpp
+    sensor_msgs
+    cv_bridge
+    nav_msgs
+    message_filters
+    image_geometry
   )
   
   #ds OpenCV - OpenCV_DIR might be overwritten by user
@@ -104,7 +110,7 @@ find_package(G2O QUIET)
 if (${CMAKE_MAJOR_VERSION} GREATER 2)
 
   #ds (comment this line if you're using an older g2o version but cmake 3+)
-  add_definitions(-DSRRG_PROSLAM_G2O_HAS_NEW_OWNERSHIP_MODEL)
+  # add_definitions(-DSRRG_PROSLAM_G2O_HAS_NEW_OWNERSHIP_MODEL)
   message("${PROJECT_NAME}|found CMake 3+: assuming new g2o ownership model")
 else()
 
@@ -115,43 +121,43 @@ endif()
 #ds check if a custom g2o library is installed
 set(SRRG_PROSLAM_HAS_OWN_G2O false)
 
-#ds if theres no SRRG g2o installation
-if("${G2O_SRRG_DIR}" STREQUAL "")
+# #ds if theres no SRRG g2o installation
+# if("${G2O_SRRG_DIR}" STREQUAL "")
 
-  #ds check if theres also no srrg g2o installation
-  if("$ENV{G2O_ROOT}" STREQUAL "")
+#   #ds check if theres also no srrg g2o installation
+#   if("$ENV{G2O_ROOT}" STREQUAL "")
   
-    #ds no custom g2o installation found, fallback to catkin g2o
-    message("${PROJECT_NAME}|using catkin g2o")
-  else()
+#     #ds no custom g2o installation found, fallback to catkin g2o
+#     message("${PROJECT_NAME}|using catkin g2o")
+#   else()
   
-    #ds use custom g2o
-    message("${PROJECT_NAME}|using custom g2o: '$ENV{G2O_ROOT}'")
-    set(SRRG_PROSLAM_HAS_OWN_G2O true)
-  endif()
-else()
+#     #ds use custom g2o
+#     message("${PROJECT_NAME}|using custom g2o: '$ENV{G2O_ROOT}'")
+#     set(SRRG_PROSLAM_HAS_OWN_G2O true)
+#   endif()
+# else()
 
-  #ds use srrg g2o
-  message("${PROJECT_NAME}|using SRRG g2o: '${G2O_SRRG_DIR}'")
-  set(SRRG_PROSLAM_HAS_OWN_G2O true)
-endif()
+#   #ds use srrg g2o
+#   message("${PROJECT_NAME}|using SRRG g2o: '${G2O_SRRG_DIR}'")
+#   set(SRRG_PROSLAM_HAS_OWN_G2O true)
+# endif()
 
 #ds if a custom g2o package was found
-if(SRRG_PROSLAM_HAS_OWN_G2O)
+# if(SRRG_PROSLAM_HAS_OWN_G2O)
 
-  #ds add it to our variables
+#   #ds add it to our variables
   set(g2o_INCLUDE_DIRS ${G2O_INCLUDE_DIR})
   set(g2o_LIBRARIES ${G2O_SOLVER_CSPARSE_EXTENSION} ${G2O_TYPES_SLAM3D} ${G2O_CORE_LIBRARY} ${G2O_STUFF_LIBRARY})
 
-else()
+# else()
 
-  #ds attempt to find a catkin g2o
-  find_package(g2o_catkin REQUIRED)
+#   #ds attempt to find a catkin g2o
+#   find_package(g2o_catkin REQUIRED)
   
-    #ds add it to our variables
-  set(g2o_INCLUDE_DIRS ${g2o_catkin_INCLUDE_DIRS})
-  set(g2o_LIBRARIES ${g2o_catkin_LIBRARIES})
-endif()
+#     #ds add it to our variables
+#   set(g2o_INCLUDE_DIRS ${g2o_catkin_INCLUDE_DIRS})
+#   set(g2o_LIBRARIES ${g2o_catkin_LIBRARIES})
+# endif()
 
 #ds load suite sparse for pose graph optimization
 find_package(SuiteSparse REQUIRED)
@@ -172,6 +178,8 @@ include_directories(SYSTEM
 #ds help the catkin tool on 16.04 (cmake seems unable to find single libraries, although catkin claims the link_directories call is not required)
 #ds in order to avoid linking against the catkin_LIBRARIES bulk everytime enable this so one can select single libraries
 link_directories(${catkin_LIBRARY_DIRS})
+
+find_package(yaml-cpp 0.7.0 REQUIRED)
 
 #ds set up catkin package (exported components)
 catkin_package(

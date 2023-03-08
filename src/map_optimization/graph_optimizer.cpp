@@ -129,7 +129,7 @@ void GraphOptimizer::writePoseGraphToFile(const WorldMap* world_map_, const std:
   //ds get a graph handle
   g2o::OptimizableGraph* pose_graph = new g2o::OptimizableGraph();
   g2o::VertexSE3* vertex_frame_last_added = 0;
-  std::map<Landmark*, g2o::VertexPointXYZ*, std::less<Landmark*>, Eigen::aligned_allocator<std::pair<Landmark*, g2o::VertexPointXYZ*>>> landmarks_in_pose_graph;
+  std::map<Landmark*, g2o::VertexPointXYZ*, std::less<Landmark*>, Eigen::aligned_allocator<std::pair<Landmark* const, g2o::VertexPointXYZ*>>> landmarks_in_pose_graph;
 
   //ds set world parameter (required for landmark EdgeSE3PointXYZ measurements)
   g2o::ParameterSE3Offset* parameter_world_offset = new g2o::ParameterSE3Offset();
