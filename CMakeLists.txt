@@ -37,6 +37,9 @@ add_definitions(-DSRRG_PROSLAM_LOG_LEVEL=2)
 #ds enable descriptor merging in HBST (and other SRRG components) - careful for collisions with landmark merging!
 add_definitions(-DSRRG_MERGE_DESCRIPTORS)
 
+#disable eigen alignment
+add_definitions(-DEIGEN_DONT_ALIGN)
+
 #ds load Eigen library
 find_package(Eigen3 REQUIRED)
 message("${PROJECT_NAME}|using Eigen version: '3' (${EIGEN3_INCLUDE_DIR})")
@@ -110,7 +113,7 @@ find_package(G2O QUIET)
 if (${CMAKE_MAJOR_VERSION} GREATER 2)
 
   #ds (comment this line if you're using an older g2o version but cmake 3+)
-  # add_definitions(-DSRRG_PROSLAM_G2O_HAS_NEW_OWNERSHIP_MODEL)
+  add_definitions(-DSRRG_PROSLAM_G2O_HAS_NEW_OWNERSHIP_MODEL)
   message("${PROJECT_NAME}|found CMake 3+: assuming new g2o ownership model")
 else()
 
