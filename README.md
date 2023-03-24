@@ -243,11 +243,6 @@ $ sudo make install -j
 sudo apt-get install build-essential libeigen3-dev libsuitesparse-dev freeglut3-dev libqglviewer-dev-qt5
 sudo apt install qt5-default
 ```
-- Modify compile error
-  - `srrg_message_groundtruther_tun_app.cpp` (line 13)
-    - typedef std::map<double, Vector6f, std::less<double>, Eigen::aligned_allocator<std::pair<const double, Vector6f>>> TimePoseMap;
-  - `cloud_viewer.h` (line 14)
-    - Eigen::aligned_allocator<std::pair<const srrg_core::Cloud3D* const, Eigen::Isometry3f> > > CloudIsometryMap;
 - Compile proSLAM with catkin
   - export OpenCV_DIR (Do not use relative path)
   - export G2O_ROOT (usually `/usr/local/include/g2o`)
