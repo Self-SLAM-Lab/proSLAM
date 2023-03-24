@@ -222,8 +222,11 @@ $ sudo apt purge ros-noetic-libg2o
 ```bash
 $ cd ~/catkin_ws/src
 $ git clone https://github.com/Self-SLAM-Lab/proSLAM
-$ cd proSLAM
-$ ./pull_srrg_packages.bash
+$ git clone https://github.com/Self-SLAM-Lab/srrg_cmake_modules
+$ git clone https://github.com/Self-SLAM-Lab/srrg_core
+$ git clone https://github.com/Self-SLAM-Lab/srrg_core_viewers
+$ git clone https://github.com/Self-SLAM-Lab/srrg_gl_helpers
+$ git clone https://github.com/Self-SLAM-Lab/srrg_hbst
 ```
 - Install yaml-cpp
 ```bash
