@@ -12,13 +12,13 @@ message("${PROJECT_NAME}|build type: '${CMAKE_BUILD_TYPE}'")
 
 #ds flags for release build
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "RELEASE")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -march=native -Wall -pedantic -Ofast -DNDEBUG")
-  message("${PROJECT_NAME}|adding flags for '${CMAKE_BUILD_TYPE}': '-std=c++11 -march=native -Wall -pedantic -Ofast -DNDEBUG'")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -march=native -Wall -pedantic -Ofast -DNDEBUG")
+  message("${PROJECT_NAME}|adding flags for '${CMAKE_BUILD_TYPE}': '-std=c++17 -march=native -Wall -pedantic -Ofast -DNDEBUG'")
   
 #ds flags for other build(s) (e.g. debug)
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -march=native -Wall -pedantic -O0 -g -fstack-check")
-  message("${PROJECT_NAME}|adding flags for '${CMAKE_BUILD_TYPE}': '-std=c++11 -march=native -Wall -pedantic -O0 -g -fstack-check'")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -march=native -Wall -pedantic -O0 -g -fstack-check")
+  message("${PROJECT_NAME}|adding flags for '${CMAKE_BUILD_TYPE}': '-std=c++17 -march=native -Wall -pedantic -O0 -g -fstack-check'")
 endif()
 
 #ds enable ARM flags if applicable
@@ -150,7 +150,7 @@ set(SRRG_PROSLAM_HAS_OWN_G2O false)
 
 #   #ds add it to our variables
   set(g2o_INCLUDE_DIRS ${G2O_INCLUDE_DIR})
-  set(g2o_LIBRARIES ${G2O_SOLVER_CSPARSE_EXTENSION} ${G2O_TYPES_SLAM3D} ${G2O_CORE_LIBRARY} ${G2O_STUFF_LIBRARY})
+  set(g2o_LIBRARIES ${G2O_SOLVER_CSPARSE_EXTENSION} ${G2O_TYPES_SLAM3D} ${G2O_CORE_LIBRARY} ${G2O_STUFF_LIBRARY} ${G2O_SOLVER_CHOLMOD} ${G2O_SOLVER_CSPARSE} ${G2O_SOLVER_CSPARSE_EXTENSION})
 
 # else()
 

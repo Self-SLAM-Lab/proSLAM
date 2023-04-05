@@ -207,11 +207,11 @@ $ cmake .. -DCMAKE_BUILD_TYPE=Release \
 -DOPENCV_ENABLE_NONFREE=ON
 $ sudo make install -j
 ```
-- Install G2O with 20200410 Release and remove installed g2o library
+- Install G2O with 20230223_git Release and remove installed g2o library
 ```bash
-$ wget https://github.com/RainerKuemmerle/g2o/archive/refs/tags/20200410_git.tar.gz
-$ tar -xvzf 20200410_git.tar.gz
-$ cd g2o-20170730_git
+$ wget https://github.com/RainerKuemmerle/g2o/archive/refs/tags/20230223_git.tar.gz
+$ tar -xvzf 20230223_git.tar.gz
+$ cd g2o-20230223_git
 $ mkdir build
 $ cd build
 $ cmake ..
