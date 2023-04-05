@@ -535,8 +535,10 @@ void SLAMAssembly::process(const cv::Mat& intensity_image_left_,
 
       //ds local map generation - regardless of tracker state
       if (_map_viewer) {_map_viewer->lock();}
+      if (_minimap_viewer) { _minimap_viewer->lock();}
       const bool created_local_map = _world_map->createLocalMap(_parameters->command_line_parameters->option_drop_framepoints);
       if (_map_viewer) {_map_viewer->unlock();}
+      if (_minimap_viewer) { _minimap_viewer->unlock();}
 
       //ds if we successfully created a local map
       if (created_local_map) {
@@ -581,12 +583,14 @@ void SLAMAssembly::process(const cv::Mat& intensity_image_left_,
 
           //ds check if we're running with a GUI and lock the GUI before the critical phase
           if (_map_viewer) {_map_viewer->lock();}
+          if (_minimap_viewer) {_minimap_viewer->lock();}
 
           //ds optimize graph
           _graph_optimizer->optimizeFramesWithLandmarks(_world_map);
 
           //ds reenable the GUI
           if (_map_viewer) {_map_viewer->unlock();}
+          if (_minimap_viewer) {_minimap_viewer->unlock();}
         }
       } else {
 
@@ -598,6 +602,7 @@ void SLAMAssembly::process(const cv::Mat& intensity_image_left_,
 
           //ds check if we're running with a GUI and lock the GUI before the critical phase
           if (_map_viewer) {_map_viewer->lock();}
+          if (_minimap_viewer) {_minimap_viewer->lock();}
 
           //ds optimize pose graph with the loop closure constraint
           _graph_optimizer->optimizeFrames(_world_map);
@@ -607,6 +612,7 @@ void SLAMAssembly::process(const cv::Mat& intensity_image_left_,
 
           //ds re-enable the GUI
           if (_map_viewer) {_map_viewer->unlock();}
+          if (_minimap_viewer) {_minimap_viewer->unlock();}
         }
       }
     } else if (_parameters->command_line_parameters->option_drop_framepoints) {
