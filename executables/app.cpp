@@ -55,7 +55,7 @@ int32_t main(int32_t argc_, char** argv_) {
       slam_system.initializeGUI(gui_server);
 
       //ds start message playback in separate thread
-      slam_thread = slam_system.playbackMessageFileInThread();
+      slam_thread = slam_system.playbackMessageFileInThread(); // Main SLAM Thread --> Thread 생성 후, 실제 SLAM 시작하는 부분
 
       //ds enter GUI loop
       while (slam_system.isViewerOpen()) {

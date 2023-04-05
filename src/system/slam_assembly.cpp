@@ -531,7 +531,7 @@ void SLAMAssembly::process(const cv::Mat& intensity_image_left_,
     _world_map->currentFrame()->setTimestampImageLeftSeconds(timestamp_image_left_seconds_);
 
     //ds if relocalization is not disabled
-    if (!_parameters->command_line_parameters->option_disable_relocalization) {
+    if (!_parameters->command_line_parameters->option_disable_relocalization) { // Relocalization 활성화 시 동작하는 부분
 
       //ds local map generation - regardless of tracker state
       if (_map_viewer) {_map_viewer->lock();}
@@ -547,12 +547,14 @@ void SLAMAssembly::process(const cv::Mat& intensity_image_left_,
         _relocalizer->detectClosures(_world_map->currentLocalMap());
         _relocalizer->registerClosures();
 //        _relocalizer->prune();
-
         //ds check the closures
         for(Closure* closure: _relocalizer->closures()) {
           if (closure->is_valid) {
             assert(_world_map->currentLocalMap() == closure->local_map_query);
-
+            LOG_INFO(std::cerr << "======================================" << std::endl)
+            LOG_INFO(std::cerr << "CHECK RELOCALIZATION VALID" << std::endl)
+            LOG_INFO(std::cerr << "======================================" << std::endl)
+            
             //ds add loop closure constraint (merging corresponding landmarks)
             _world_map->addLoopClosure(_world_map->currentLocalMap(),
                                        closure->local_map_reference,
