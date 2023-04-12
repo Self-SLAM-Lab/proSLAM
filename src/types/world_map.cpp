@@ -60,7 +60,7 @@ Frame* WorldMap::createFrame(const TransformMatrix3D& robot_to_world_,
   } else {
 
     //ds we have a new root frame
-    _root_frame = _current_frame;
+    _root_frame = _current_frame; // 아마 시작 프레임 얘기하는듯? (Start라고 하지 왜 root라고)
     _current_frame ->setRoot(_root_frame);
   }
 

@@ -24,7 +24,7 @@ namespace proslam {
   }
 
   Frame* StereoTracker::_createFrame(){
-    Frame* current_frame = _context->createFrame(_context->robotToWorld());
+    Frame* current_frame = _context->createFrame(_context->robotToWorld()); // 시작은 너도 Identity
     current_frame->setCameraLeft(_camera_left);
     current_frame->setIntensityImageLeft(_intensity_image_left);
     current_frame->setCameraRight(_camera_right);

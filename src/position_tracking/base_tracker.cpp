@@ -43,14 +43,14 @@ void BaseTracker::compute() {
   _context->currentlyTrackedLandmarks().clear();
 
   //ds relative camera motion guess
-  TransformMatrix3D previous_to_current = TransformMatrix3D::Identity();
+  TransformMatrix3D previous_to_current = TransformMatrix3D::Identity(); // Initialize with previous frame
 
   //ds check if initial guess can be refined with a motion model or other input
   switch(_parameters->motion_model) {
 
     //ds use previous motion as initial guess for current motion
     case Parameters::MotionModel::CONSTANT_VELOCITY: {
-      previous_to_current = _previous_to_current_camera;
+      previous_to_current = _previous_to_current_camera; // 최초 프레임에서는 Identity
       break;
     }
 
@@ -79,14 +79,14 @@ void BaseTracker::compute() {
 
   //ds create new frame
   Frame* current_frame = _createFrame();
-  current_frame->setStatus(_status);
-  Frame* previous_frame = current_frame->previous();
+  current_frame->setStatus(_status); // 최초는 Localizing Status
+  Frame* previous_frame = current_frame->previous(); // 최초는 nullptr
 
   //ds initialize framepoint generator
   _framepoint_generator->initialize(current_frame);
 
   //ds if possible - attempt to track the points from the previous frame
-  if (previous_frame) {
+  if (previous_frame) { // 첫프레임 아님
 
     //ds see if we're tracking by appearance (expecting large photometric displacements between images)
     //ds always do it for the first 2 frames (repeats after track is lost)
@@ -440,7 +440,7 @@ void BaseTracker::_updatePoints(WorldMap* context_, Frame* frame_) {
     }
 
     //ds update landmark position based on current point (triggered as we linked the landmark to the point)
-    landmark->update(point);
+    landmark->update(point); // information filter 기반으로 최적화
     point->setCameraCoordinatesLeftLandmark(frame_->worldToCameraLeft()*landmark->coordinates());
     ++_number_of_active_landmarks;
 

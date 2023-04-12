@@ -71,10 +71,10 @@ void StereoFramePointGenerator::initialize(Frame* frame_, const bool& extract_fe
     detectKeypoints(frame_->intensityImageRight(), frame_->keypointsRight());
 
     //ds adjust detector thresholds for next frame
-    adjustDetectorThresholds();
+    adjustDetectorThresholds(); // 모자라거나, 많은 경우 이에 맞춰서 조절한 threshold로 변경
 
     //ds overwrite with average
-    _number_of_detected_keypoints = (frame_->keypointsLeft().size()+frame_->keypointsRight().size())/2.0;
+    _number_of_detected_keypoints = (frame_->keypointsLeft().size()+frame_->keypointsRight().size())/2.0; // 좌우측 개수의 평균으로 설정
     frame_->_number_of_detected_keypoints = _number_of_detected_keypoints;
 
     //ds extract descriptors for detected features
@@ -359,10 +359,10 @@ void StereoFramePointGenerator::compute(Frame* frame_) {
       }
 
       //ds check if something was found
-      if (descriptor_distance_best < _current_maximum_descriptor_distance_triangulation) {
+      if (descriptor_distance_best < _current_maximum_descriptor_distance_triangulation) { // 왠지 Triangulation할 거 같음
         IntensityFeature* feature_right = features_right[index_best_R];
 
-        //ds skip points with insufficient stereo disparity
+        //ds skip points with insufficient stereo disparity, 너무 멀리있는 경우
         if (feature_left->col-feature_right->col < _parameters->minimum_disparity_pixels) {
           continue;
         }

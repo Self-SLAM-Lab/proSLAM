@@ -179,7 +179,7 @@ void BaseFramePointGenerator::detectKeypoints(const cv::Mat& intensity_image_, s
       const real delta = (static_cast<real>(keypoints_per_detector.size())-_target_number_of_keypoints_per_detector)/_target_number_of_keypoints_per_detector;
 
       //ds check if there's a significant loss of target points (delta is negative)
-      if (delta < -_parameters->target_number_of_keypoints_tolerance) {
+      if (delta < -_parameters->target_number_of_keypoints_tolerance) { // Keypoint가 부족한 경우 Threshold 줄임
 
         //ds compute new, lower threshold, capped and damped
         const real change = std::max(delta, -_parameters->detector_threshold_maximum_change);
@@ -194,7 +194,7 @@ void BaseFramePointGenerator::detectKeypoints(const cv::Mat& intensity_image_, s
       }
 
       //ds or if there's a significant gain of target points (delta is positive)
-      else if (delta > _parameters->target_number_of_keypoints_tolerance) {
+      else if (delta > _parameters->target_number_of_keypoints_tolerance) { // Keypoint가 넘치는 경우, Threshold 늘림
 
         //ds compute new, higher threshold - capped and damped
         const real change = std::min(delta, _parameters->detector_threshold_maximum_change);
@@ -208,12 +208,12 @@ void BaseFramePointGenerator::detectKeypoints(const cv::Mat& intensity_image_, s
         }
       }
 
-      //ds set treshold (no effect if not changed)
+      //ds set threshold (no effect if not changed)
       _detector_thresholds[r][c] = detector_threshold;
 
       //ds shift keypoint coordinates to whole image region
-      const cv::Point2f& offset = _detector_regions[r][c].tl();
-      std::for_each(keypoints_per_detector.begin(), keypoints_per_detector.end(), [&offset](cv::KeyPoint& keypoint_) {keypoint_.pt += offset;});
+      const cv::Point2f& offset = _detector_regions[r][c].tl(); // 사각형 영역의 Top-Left 포인트
+      std::for_each(keypoints_per_detector.begin(), keypoints_per_detector.end(), [&offset](cv::KeyPoint& keypoint_) {keypoint_.pt += offset;}); // Grid 좌표계에서 전체 이미지 전체 좌표계로 변경
 
       //ds add to complete vector
       keypoints_.insert(keypoints_.end(), keypoints_per_detector.begin(), keypoints_per_detector.end());
